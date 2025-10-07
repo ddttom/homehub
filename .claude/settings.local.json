@@ -3,7 +3,14 @@
     "allow": [
       "Bash(chmod:*)",
       "Bash(echo $PATH)",
-      "Read(//usr/local/bin/**)"
+      "Read(//usr/local/bin/**)",
+      "Bash(docker context:*)",
+      "Read(//Users/tomcranstoun/.docker/**)",
+      "Read(//Applications/Docker.app/Contents/Resources/bin/**)",
+      "Bash(/Applications/Docker.app/Contents/Resources/bin/docker info)",
+      "Bash(export DOCKER_HOST=\"unix://$HOME/.docker/run/docker.sock\")",
+      "Bash(/Applications/Docker.app/Contents/Resources/bin/docker compose logs)",
+      "Bash(/Applications/Docker.app/Contents/Resources/bin/docker compose ps)"
     ],
     "deny": [],
     "ask": []

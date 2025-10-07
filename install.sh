@@ -54,19 +54,16 @@ elif [ -f "/Applications/Docker.app/Contents/Resources/bin/docker" ]; then
     export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
 fi
 
+# Set DOCKER_HOST for macOS Docker Desktop
+if [ -S "$HOME/.docker/run/docker.sock" ]; then
+    export DOCKER_HOST="unix://$HOME/.docker/run/docker.sock"
+fi
+
 if [ -z "$DOCKER_CMD" ]; then
     print_error "Docker is not installed. Please install Docker Desktop from https://www.docker.com/products/docker-desktop"
     exit 1
 fi
 print_success "Docker is installed ($($DOCKER_CMD --version))"
-
-# Check if Docker daemon is running
-print_status "Checking if Docker daemon is running..."
-if ! $DOCKER_CMD info &> /dev/null; then
-    print_error "Docker daemon is not running. Please start Docker Desktop and try again."
-    exit 1
-fi
-print_success "Docker daemon is running"
 
 # Check for Docker Compose
 print_status "Checking for Docker Compose..."
@@ -101,14 +98,14 @@ else
     print_success "Python 3 is installed ($(python3 --version))"
 fi
 
-# Check if port 5000 is available
-print_status "Checking if port 5000 is available..."
-if lsof -Pi :5000 -sTCP:LISTEN -t >/dev/null 2>&1; then
-    print_error "Port 5000 is already in use. Please stop the service using this port or modify the port in compose.yml"
-    print_status "You can find what's using port 5000 with: lsof -i :5000"
+# Check if port 5002 is available
+print_status "Checking if port 5002 is available..."
+if lsof -Pi :5002 -sTCP:LISTEN -t >/dev/null 2>&1; then
+    print_error "Port 5002 is already in use. Please stop the service using this port or modify the port in compose.yml"
+    print_status "You can find what's using port 5002 with: lsof -i :5002"
     exit 1
 fi
-print_success "Port 5000 is available"
+print_success "Port 5002 is available"
 
 echo ""
 print_status "All prerequisites checked successfully!"
@@ -217,7 +214,7 @@ print_success "HomeHub container started successfully"
 sleep 3
 
 # Check if container is running
-if $DOCKER_CMD compose ps | grep -q "running"; then
+if $DOCKER_CMD compose ps | grep -q "Up"; then
     print_success "HomeHub is running!"
 else
     print_error "Container failed to start. Check logs with: docker compose logs"
@@ -229,7 +226,7 @@ echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}  Installation Complete!${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo ""
-echo -e "HomeHub is now running at: ${BLUE}http://localhost:5000${NC}"
+echo -e "HomeHub is now running at: ${BLUE}http://localhost:5002${NC}"
 echo -e "Instance Name: ${BLUE}Tom and Eleanor's Hub${NC}"
 echo -e "Family Members: ${BLUE}Tom, Eleanor${NC}"
 echo -e "Password: ${BLUE}3056${NC}"
